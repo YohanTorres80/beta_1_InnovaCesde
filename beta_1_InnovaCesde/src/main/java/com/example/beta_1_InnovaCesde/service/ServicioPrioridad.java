@@ -24,13 +24,39 @@ public class ServicioPrioridad {
 
     }
 
+    // Buscar
+    public List<Prioridad> buscar() {
+        return this.repositorioPrioridad.findAll();
+    }
 
-    //buscar
+    // Actualizar
+    public Prioridad modificar(UUID id, Prioridad datosNuevos) {
+        Optional<Prioridad> prioridadBuscada = this.repositorioPrioridad.findById(id);
 
+        if (prioridadBuscada.isPresent()) {
+            Prioridad prioridadEncontrada = prioridadBuscada.get();
 
-    //actualizar
+            // Modificando los datos
+            prioridadEncontrada.setNombre(datosNuevos.getNombre());
+            // Si la clase Prioridad tiene otros campos (ej: descripcion), los agregas aquí:
+            // prioridadEncontrada.setDescripcion(datosNuevos.getDescripcion());
 
+            // Guardo los cambios y los retorno
+            return this.repositorioPrioridad.save(prioridadEncontrada);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Prioridad no encontrada");
+        }
+    }
 
-    //eliminar
+    // Eliminar
+    public boolean eliminar(UUID id) {
+        Optional<Prioridad> prioridadBuscada = this.repositorioPrioridad.findById(id);
 
+        if (prioridadBuscada.isPresent()) {
+            this.repositorioPrioridad.deleteById(id);
+            return true;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró la prioridad");
+        }
+    }
 }
